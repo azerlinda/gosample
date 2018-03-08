@@ -1,0 +1,61 @@
+<head>
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+</head>
+<label>Filter by name:</label>
+<input type="text" id="filter" name="filter" />
+
+<label>Visitor count: {{ .Visitor }}</label>
+<br><br>
+
+<table border="1" id="user_table">
+    <tr>
+        <td>ID</td>
+        <td>Name</td>
+        <td>MSISDN</td>
+        <td>Email</td>
+        <td>Birthdate</td>
+        <td>CreateTime</td>
+        <td>UpdateTime</td>
+        <td>UserAge</td>
+    </tr>
+     {{ range .Users }}
+    <tr>
+        <td> {{ .ID }} </td>
+        <td> {{ .Name }} </td>
+        <td> {{ .MSISDN }} </td>
+        <td> {{ .Email}} </td>
+        <td> {{ .Birthdate}} </td>
+        <td> {{ .CreateTime}} </td>
+        <td> {{ .UpdateTime}} </td>
+        <td> {{ .UserAge}} </td>
+    </tr>
+    {{ end }}
+</table>
+
+<script>
+    $('#filter').change(function() {
+        var query = $('#filter').val();
+        $.ajax({
+            type: "GET",
+            url: "/users?name=" + query,
+            cache: false,
+            success: function (data) {
+                var table = "<tr> <td>ID</td> <td>Name</td> <td>MSISDN</td> <td>Email</td> <td>Birthdate</td> <td>CreateTime</td> <td>UpdateTime</td> <td>UserAge</td> </tr>";
+                data.forEach(user => {
+                    table+= "<tr>"
+                    table+= "<td>" + user.id + "</td>"
+                    table+= "<td>" + user.name + "</td>"
+                    table+= "<td>" + user.msisdn + "</td>"
+                    table+= "<td>" + user.email + "</td>"
+                    table+= "<td>" + user.birthdate + "</td>"
+                    table+= "<td>" + user.created_time + "</td>"
+                    table+= "<td>" + user.update_time + "</td>"
+                    table+= "<td>" + user.user_age + "</td>"
+                    table+= "<tr>"
+                });
+                $("#user_table").html(table);
+            }
+        });
+    })    
+</script>
